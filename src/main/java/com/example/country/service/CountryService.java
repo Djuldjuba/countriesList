@@ -1,6 +1,6 @@
 package com.example.country.service;
 
-import com.example.country.domain.CountryRequest;
+import com.example.country.domain.CreateCountryRequest;
 import com.example.country.domain.CountryResponse;
 import com.example.country.domain.CountryUpdateRequest;
 
@@ -10,7 +10,7 @@ public interface CountryService {
 
     List<CountryResponse> getAllCountries();
 
-    CountryResponse addCountry(CountryRequest request);
+    CountryResponse addCountry(CreateCountryRequest request);
 
     CountryResponse updateCountryName(String code, CountryUpdateRequest request);
 }

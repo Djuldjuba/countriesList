@@ -8,16 +8,13 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
-    show-sql: false
-    generate-ddl: true
-    open-in-view: false
+      ddl-auto: validate
+    generate-ddl: false
     properties:
       hibernate:
         jdbc:
           lob:
             non_contextual_creation: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:
     enabled: true

@@ -1,22 +1,25 @@
 package com.example.country.service;
 
-import com.example.country.domain.CountryRequest;
+import com.example.country.domain.CreateCountryRequest;
 import com.example.country.domain.CountryResponse;
 import com.example.country.domain.CountryUpdateRequest;
 import com.example.country.entity.CountryEntity;
+import com.example.country.exception.CountryAlreadyExistsException;
+import com.example.country.exception.CountryNotFoundException;
 import com.example.country.repository.CountryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Component
-public class CountryServiceDb implements CountryService {
+import java.util.List;
+
+@Service
+public class CountryServiceImpl implements CountryService {
 
     private final CountryRepository countryRepository;
 
     @Autowired
-    public CountryServiceDb(CountryRepository countryRepository) {
+    public CountryServiceImpl(CountryRepository countryRepository) {
         this.countryRepository = countryRepository;
     }
 
@@ -24,13 +27,13 @@ public class CountryServiceDb implements CountryService {
     public List<CountryResponse> getAllCountries() {
         return countryRepository.findAll().stream()
                 .map(c -> new CountryResponse(c.getCode(), c.getName()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    @Override
-    public CountryResponse addCountry(CountryRequest request) {
+    @Transactional
+    public CountryResponse addCountry(CreateCountryRequest request) {
         if (countryRepository.existsById(request.code())) {
-            throw new RuntimeException("Country with code " + request.code() + " already exists");
+            throw new CountryAlreadyExistsException(request.code());
         }
 
         CountryEntity entity = new CountryEntity();
@@ -41,14 +44,12 @@ public class CountryServiceDb implements CountryService {
         return new CountryResponse(saved.getCode(), saved.getName());
     }
 
-    @Override
+    @Transactional
     public CountryResponse updateCountryName(String code, CountryUpdateRequest request) {
         CountryEntity entity = countryRepository.findById(code)
-                .orElseThrow(() -> new RuntimeException("Country not found with code: " + code));
+                .orElseThrow(() -> new CountryNotFoundException(code));
 
-        if (request.name() != null) {
-            entity.setName(request.name());
-        }
+        entity.setName(request.name());
 
         CountryEntity updated = countryRepository.save(entity);
         return new CountryResponse(updated.getCode(), updated.getName());
