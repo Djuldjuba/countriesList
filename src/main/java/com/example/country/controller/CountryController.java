@@ -54,7 +54,6 @@ public class CountryController {
         return ResponseEntity.ok(response);
     }
 
-    // Простой обработчик ошибок прямо в контроллере
     @ExceptionHandler(CountryNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNotFound(CountryNotFoundException ex) {
