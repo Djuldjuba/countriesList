@@ -13,4 +13,6 @@ public interface CountryService {
     CountryResponse addCountry(CreateCountryRequest request);
 
     CountryResponse updateCountryName(String code, CountryUpdateRequest request);
+
+    CountryResponse getCountryByCode(String code);
 }
