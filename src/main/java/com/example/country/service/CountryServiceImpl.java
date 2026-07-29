@@ -54,4 +54,11 @@ public class CountryServiceImpl implements CountryService {
         CountryEntity updated = countryRepository.save(entity);
         return new CountryResponse(updated.getCode(), updated.getName());
     }
+
+    @Override
+    public CountryResponse getCountryByCode(String code) {
+        return countryRepository.findById(code)
+                .map(entity -> new CountryResponse(entity.getCode(), entity.getName()))
+                .orElseThrow(() -> new CountryNotFoundException(code));
+    }
 }

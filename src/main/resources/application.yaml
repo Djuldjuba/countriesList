@@ -5,6 +5,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/countrydb
     username: postgres
     password: postgres
+  graphql:
+    graphiql:
+      enabled: true
 
   jpa:
     hibernate:

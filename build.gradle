@@ -27,6 +27,8 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'com.tailrocks.graphql:graphql-datetime-spring-boot-starter:6.0.0'
+	implementation 'org.springframework.boot:spring-boot-starter-graphql:3.2.0'
 }
 
 flyway {
