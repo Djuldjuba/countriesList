@@ -1,0 +1,90 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management'
+}
+
+group = 'com.example'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'wsdl4j:wsdl4j:1.6.3'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.0'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+configurations {
+    jaxws
+}
+
+dependencies {
+    jaxws 'com.sun.xml.ws:jaxws-tools:4.0.0'
+    jaxws 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+    jaxws 'org.glassfish.jaxb:jaxb-runtime:4.0.0'
+    jaxws 'javax.xml.bind:jaxb-api:2.3.1'
+}
+
+task wsimport {
+    ext.destDir = file("${buildDir}/generated/source/wsimport/main/java")
+    ext.wsdlFile = file("${projectDir}/src/main/resources/wsdl/countriesList.wsdl")
+
+    doLast {
+        destDir.mkdirs()
+
+        ant.taskdef(name: 'wsimport',
+                classname: 'com.sun.tools.ws.ant.WsImport',
+                classpath: configurations.jaxws.asPath)
+
+        ant.wsimport(keep: true,
+                destdir: destDir,
+                sourcedestdir: destDir,
+                package: "com.example.xml.country",
+                wsdl: wsdlFile) {
+            xjcarg(value: "-XautoNameResolution")
+        }
+    }
+}
+
+compileJava {
+    dependsOn wsimport
+    source wsimport.destDir
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir('src/main/java')
+            srcDir(wsimport.destDir)
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
