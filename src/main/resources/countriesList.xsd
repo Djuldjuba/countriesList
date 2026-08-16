@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="countriesList"
+           targetNamespace="countriesList"
+           elementFormDefault="qualified">
+
+    <!-- REQUEST TYPES -->
+
+    <xs:element name="getCountriesRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <!-- Пустой запрос для получения всех стран -->
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCountryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="code" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="addCountryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="input" type="tns:createCountryRequest"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateCountryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="code" type="xs:string"/>
+                <xs:element name="input" type="tns:countryUpdateRequest"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- RESPONSE TYPES -->
+
+    <xs:element name="getCountriesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="country" type="tns:countryResponse" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCountryResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="country" type="tns:countryResponse"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- CUSTOM TYPES -->
+
+    <xs:complexType name="countryResponse">
+        <xs:sequence>
+            <xs:element name="code" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="createCountryRequest">
+        <xs:sequence>
+            <xs:element name="code" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="countryUpdateRequest">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>
